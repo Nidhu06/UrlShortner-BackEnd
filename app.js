@@ -477,7 +477,7 @@ app.get("/auth0/:token", (req, res) => {
                     });
                 }
                 if (result) {
-                    res.redirect('https://nimmy-urlshortner.netlify.app/Auth/newpassword.html');
+                    res.redirect('https://nimmy-urlshortner.netlify.app/auth/newpassword');
                 }
             });
         }
