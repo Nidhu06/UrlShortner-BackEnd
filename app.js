@@ -1,6 +1,6 @@
 const express = require('express');
-const app = express(); //initialize express
-const bodyParser = require('body-parser'); //body parsing middleware
+const app = express(); 
+const bodyParser = require('body-parser');
 var jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser')
 const uid = require('rand-token').uid; // random token generator
@@ -29,8 +29,8 @@ app.use(cors({
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-        user: process.env.GMAILUSER,
-        pass: process.env.GMAILPASS
+        user: "s.nidafathima@gmail.com",
+        pass: "xevnwwhapfnnqkwv"
     }
 });
 
@@ -191,9 +191,9 @@ app.post("/register", async (req, res) => {
 
                         let url = `https://nimmy-urlshortner.herokuapp.com/auth/${emailToken}`
                         let name = `${email.split('@')[0]}`
-                        //email template for sending token
+                        
                         var mailOptions = {
-                            from: '"Hello !!" <sheisabeauty@nimmy.com>',
+                            from: '"Hello !!" <s.nidafathima@gmail.com>',
                             to: `${email}`,
                             subject: 'Account Confirmation Link',
                             html: `Hello ${name} , Here's your Account verification link: <br> <a style="color:green" href="${url}">Click Here To Confirm</a> <br> Link expires in an hour...`
@@ -205,7 +205,7 @@ app.post("/register", async (req, res) => {
                                 return res.json({
                                     message: 'Check your mail and Confirm Identity...',
                                     type_: 'success'
-                                }); //* if mail sent send this msg
+                                }); 
                             }
                         });
                     }
@@ -353,7 +353,7 @@ app.post("/resetpassword", cors(), async (req, res) => {
             let name = `${email.split('@')[0]}`
             //email template for sending token
             var mailOptions = {
-                from: '"Hello !!" <sheisabeauty@nimmy.com>',
+                from: '"Hello !!" s.nidafathima@gmail.com',
                 to: `${email}`,
                 subject: 'Password Reset Link',
                 html: `Hello ${name} ,<br> Here's your password reset link: <a style="color:green" href="${url}">Click Here To Reset</a> Link expires in 10 minutes...`
