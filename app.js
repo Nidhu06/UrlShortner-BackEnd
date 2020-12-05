@@ -9,7 +9,7 @@ const saltRounds = 10;
 const nodemailer = require("nodemailer"); 
 require('dotenv').config()
 const mongodb = require('mongodb'); 
-const cors = require('cors'); //middleware that can be used to enable CORS with various options
+const cors = require('cors'); 
 app.proxy = true
 const mongoClient = mongodb.MongoClient;
 const url = "mongodb+srv://Nidhu06:Munn@0631@cluster0.ld8wh.mongodb.net/urlshortner?retryWrites=true&w=majority";
@@ -58,9 +58,10 @@ app.get("/getusers",async (req, res) => {
     let client = await mongoClient.connect(url, {
         useNewUrlParser: true,
         useUnifiedTopology: true
-    }); //connect to db
-    let db = client.db("urlshortner"); //db name
-    let user = db.collection("users"); //collection name
+    }); 
+
+    let db = client.db("urlshortner"); 
+    let user = db.collection("users"); 
     user.find({}).toArray((err, result) => {
         if (result) {
             return res.json({
@@ -74,9 +75,9 @@ app.get("/getlinks",async (req, res) => {
     let client = await mongoClient.connect(url, {
         useNewUrlParser: true,
         useUnifiedTopology: true
-    }); //connect to db
-    let db = client.db("urlshortner"); //db name
-    let links = db.collection("links"); //collection name
+    });
+    let db = client.db("urlshortner"); 
+    let links = db.collection("links"); 
     links.find({}).toArray((err, result) => {
         if (result) {
             return res.json({
@@ -94,9 +95,9 @@ app.post("/adminlogin",async (req, res) => {
     let client = await mongoClient.connect(url, {
         useNewUrlParser: true,
         useUnifiedTopology: true
-    }); //connect to db
-    let db = client.db("urlshortner"); //db name
-    let user = db.collection("users"); //collection name
+    }); 
+    let db = client.db("urlshortner"); 
+    let user = db.collection("users"); 
     user.findOne({
         email: email
     }, (err, User) => {
@@ -113,19 +114,19 @@ app.post("/adminlogin",async (req, res) => {
             });
         } else {
             if (User.confirmed == true) {
-                bcrypt.compare(password, User.password, function (err, result) { //* check credentials
+                bcrypt.compare(password, User.password, function (err, result) { 
                     if (err) {
                         return res.json({
                             message: 'Something went wrong..',
                             type_: 'danger'
                         })
                     }
-                    if (result == true) { //if matched 
+                    if (result == true) { 
                         let token = jwt.sign({
                             email: email
                         }, process.env.JWT_SECRET, {
                             expiresIn: '1h'
-                        }); //*assign a token
+                        }); 
                         res.cookie('jwt', token, {
                             maxAge: 100000000000,
                             httpOnly: true,
@@ -157,12 +158,12 @@ app.post("/register", async (req, res) => {
     let client = await mongoClient.connect(url, {
         useNewUrlParser: true,
         useUnifiedTopology: true
-    }); //connect to db
-    let db = client.db("urlshortner"); //db name
-    let user = db.collection("users"); //collection name
+    }); 
+    let db = client.db("urlshortner"); 
+    let user = db.collection("users"); 
     user.findOne({
         email: email
-    }, (err, result) => { //find if the email is already exist in the collection
+    }, (err, result) => { 
         if (err) {
             return res.json({
                 message: 'something went wrong',
@@ -170,7 +171,7 @@ app.post("/register", async (req, res) => {
             });
         }
         if (result == null) {
-            bcrypt.hash(password, saltRounds, function (err, hash) { //hash the client password
+            bcrypt.hash(password, saltRounds, function (err, hash) { 
                 if (err) {
                     return res.json({
                         message: 'something went wrong',
@@ -228,9 +229,9 @@ app.post("/login", async (req, res) => {
     let client = await mongoClient.connect(url, {
         useNewUrlParser: true,
         useUnifiedTopology: true
-    }); //connect to db
-    let db = client.db("urlshortner"); //db name
-    let user = db.collection("users"); //collection name
+    }); 
+    let db = client.db("urlshortner"); 
+    let user = db.collection("users"); 
     user.findOne({
         email: email
     }, (err, User) => {
@@ -247,19 +248,19 @@ app.post("/login", async (req, res) => {
             });
         } else {
             if (User.confirmed == true) {
-                bcrypt.compare(password, User.password, function (err, result) { //* if found compare the & check passworded match or not
+                bcrypt.compare(password, User.password, function (err, result) { 
                     if (err) {
                         return res.json({
                             message: 'Something went wrong..',
                             type_: 'danger'
                         })
                     }
-                    if (result == true) { //if matched 
+                    if (result == true) {  
                         let token = jwt.sign({
                             email: email
                         }, process.env.JWT_SECRET, {
                             expiresIn: '1h'
-                        }); //*assign a token
+                        });
                         res.cookie('jwt', token, {
                             maxAge: 1000000,
                             httpOnly: true,
@@ -316,27 +317,27 @@ app.get("/logout", (req, res) => {
     })
 });
 
-//Endpoint for resetting password
+
 app.post("/resetpassword", cors(), async (req, res) => {
     const {
         email
-    } = req.body //email from client
+    } = req.body
     let client = await mongoClient.connect(url, {
         useNewUrlParser: true,
         useUnifiedTopology: true
-    }); //connect to db
-    let db = client.db("urlshortner"); //db name
-    let user = db.collection("users"); //collection name
-    user.findOne({ //find if the email exist in the collection
+    }); 
+    let db = client.db("urlshortner");
+    let user = db.collection("users"); 
+    user.findOne({ 
         email: email
     }, (err, users) => {
         if (users == null) {
             return res.json({
                 message: 'No registered user found with ' + email,
                 type_: 'warning'
-            }); //! if not found send this status
-        } else { //if found 
-            // let token = uid(5);
+            }); 
+        } else { 
+           
             let emailToken = jwt.sign({
                 email: email
             }, process.env.JWT_SECRET, {
@@ -351,7 +352,7 @@ app.post("/resetpassword", cors(), async (req, res) => {
             });
             let url = `https://nimmy-urlshortner.herokuapp.com/auth0/${emailToken}`
             let name = `${email.split('@')[0]}`
-            //email template for sending token
+
             var mailOptions = {
                 from: '"Hello !!" s.nidafathima@gmail.com',
                 to: `${email}`,
@@ -359,7 +360,7 @@ app.post("/resetpassword", cors(), async (req, res) => {
                 html: `Hello ${name} ,<br> Here's your password reset link: <a style="color:green" href="${url}">Click Here To Reset</a> Link expires in 10 minutes...`
             };
 
-            //Send the mail
+          
             transporter.sendMail(mailOptions, function (error, info) {
                 if (error) {
                     return res.json({
@@ -370,7 +371,7 @@ app.post("/resetpassword", cors(), async (req, res) => {
                     return res.json({
                         message: 'Check your mail and Confirm Identity...',
                         type_: 'success'
-                    }); //* if mail sent send this msg
+                    }); 
                 }
             });
         }
@@ -378,7 +379,7 @@ app.post("/resetpassword", cors(), async (req, res) => {
             return res.json({
                 message: err,
                 type_: 'danger'
-            }); //! if found any error send this status
+            }); 
         }
     })
 });
@@ -387,13 +388,13 @@ app.post('/newpassword', cors(), async (req, res) => {
     const {
         password,
         email
-    } = req.body; //email & newpassword from client
+    } = req.body; 
     let client = await mongoClient.connect(url, {
         useNewUrlParser: true,
         useUnifiedTopology: true
-    }); //connect to db
-    let db = client.db("urlshortner"); //db name
-    let user = db.collection("users"); //collection name
+    }); 
+    let db = client.db("urlshortner");
+    let user = db.collection("users"); 
     user.findOne({
         email: email
     }, (err, User) => {
@@ -407,11 +408,11 @@ app.post('/newpassword', cors(), async (req, res) => {
             return res.json({
                 message: 'No registered user found with ' + email,
                 type_: 'warning'
-            }); //! if not found send this status
+            }); 
         } else {
-            //find if the token exists in the collection
+            
             if (User.confirmed == true) {
-                bcrypt.hash(password, saltRounds, function (err, hash) { //hash the new password
+                bcrypt.hash(password, saltRounds, function (err, hash) { 
                     if (err) {
                         return res.json({
                             message: err,
@@ -422,7 +423,7 @@ app.post('/newpassword', cors(), async (req, res) => {
                             email: email
                         }, {
                             $set: {
-                                password: hash //and set the new hashed password in the db
+                                password: hash 
                             }
                         }, (err, result) => {
                             if (err) {
@@ -452,7 +453,7 @@ app.post('/newpassword', cors(), async (req, res) => {
 
 })
 
-//for password reset auth
+
 app.get("/auth0/:token", (req, res) => {
     const token = req.params.token
     jwt.verify(token, process.env.JWT_SECRET, async function (err, decoded) {
@@ -461,8 +462,8 @@ app.get("/auth0/:token", (req, res) => {
                 useNewUrlParser: true,
                 useUnifiedTopology: true
             });
-            let db = client.db("urlshortner"); //db name
-            let user = db.collection("users"); //collection name
+            let db = client.db("urlshortner"); 
+            let user = db.collection("users"); 
             user.findOneAndUpdate({
                 email: decoded.email
             }, {
@@ -485,12 +486,12 @@ app.get("/auth0/:token", (req, res) => {
             return res.json({
                 message: err,
                 type_: 'danger'
-            }); //if the token expired send this status
+            }); 
         }
     });
 });
 
-//for account auth
+
 app.get("/auth/:token", (req, res) => {
     const token = req.params.token
     jwt.verify(token, process.env.JWT_SECRET, async function (err, decoded) {
@@ -499,13 +500,13 @@ app.get("/auth/:token", (req, res) => {
                 useNewUrlParser: true,
                 useUnifiedTopology: true
             });
-            let db = client.db("urlshortner"); //db name
-            let user = db.collection("users"); //collection name
+            let db = client.db("urlshortner"); 
+            let user = db.collection("users"); 
             user.findOneAndUpdate({
                 email: decoded.email
             }, {
                 $set: {
-                    confirmed: true //and set the new hashed password in the db
+                    confirmed: true 
                 }
             }, (err, result) => {
                 if (err) {
@@ -537,8 +538,8 @@ app.post("/nimmyFy", async (req, res) => {
         useNewUrlParser: true,
         useUnifiedTopology: true
     }); //connect to db
-    let db = client.db("urlshortner"); //db name
-    let links = db.collection("links"); //collection name
+    let db = client.db("urlshortner"); 
+    let links = db.collection("links"); 
     const token = uid(5);
     let d = new Date();
     let date = d.getDate() + '-' + d.getMonth() + '-' + d.getFullYear();
@@ -575,8 +576,8 @@ app.post("/MyLinks", async (req, res) => {
         useNewUrlParser: true,
         useUnifiedTopology: true
     }); //connect to db
-    let db = client.db("urlshortner"); //db name
-    let links = db.collection("links"); //collection name
+    let db = client.db("urlshortner"); 
+    let links = db.collection("links"); 
     links.find({
         requestedBy: user
     }).toArray((err, result) => {
@@ -596,8 +597,8 @@ app.get("/fy/:token", async (req, res) => {
         useNewUrlParser: true,
         useUnifiedTopology: true
     }); //connect to db
-    let db = client.db("urlshortner"); //db name
-    let links = db.collection("links"); //collection name
+    let db = client.db("urlshortner"); 
+    let links = db.collection("links"); 
     links.findOne({
         shortLink: token
     }, (err, result) => {
