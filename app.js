@@ -524,7 +524,7 @@ app.get("/auth/:token", (req, res) => {
             return res.json({
                 message: err,
                 type_: 'danger'
-            }); //if the token expired send this status
+            }); 
         }
     });
 });
@@ -537,7 +537,7 @@ app.post("/nimmyFy", async (req, res) => {
     let client = await mongoClient.connect(url, {
         useNewUrlParser: true,
         useUnifiedTopology: true
-    }); //connect to db
+    }); 
     let db = client.db("urlshortner"); 
     let links = db.collection("links"); 
     const token = uid(5);
@@ -575,7 +575,7 @@ app.post("/MyLinks", async (req, res) => {
     let client = await mongoClient.connect(url, {
         useNewUrlParser: true,
         useUnifiedTopology: true
-    }); //connect to db
+    }); 
     let db = client.db("urlshortner"); 
     let links = db.collection("links"); 
     links.find({
@@ -596,7 +596,7 @@ app.get("/fy/:token", async (req, res) => {
     let client = await mongoClient.connect(url, {
         useNewUrlParser: true,
         useUnifiedTopology: true
-    }); //connect to db
+    }); 
     let db = client.db("urlshortner"); 
     let links = db.collection("links"); 
     links.findOne({
