@@ -3,12 +3,12 @@ const app = express();
 const bodyParser = require('body-parser');
 var jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser')
-const uid = require('rand-token').uid; // random token generator
-const bcrypt = require('bcryptjs'); //library to hash passwords
-const saltRounds = 10; //cost factor (controls how much time is needed to calculate a single BCrypt hash)
-const nodemailer = require("nodemailer"); //sends e-mails
+const uid = require('rand-token').uid; 
+const bcrypt = require('bcryptjs'); 
+const saltRounds = 10; 
+const nodemailer = require("nodemailer"); 
 require('dotenv').config()
-const mongodb = require('mongodb'); //MongoDB driver 
+const mongodb = require('mongodb'); 
 const cors = require('cors'); //middleware that can be used to enable CORS with various options
 app.proxy = true
 const mongoClient = mongodb.MongoClient;
